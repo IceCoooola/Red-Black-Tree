@@ -49,12 +49,12 @@ public:
             if(kv.first < cur->_kv.first)
             {
                 parent = cur;
-                cur = cur->_right;
+                cur = cur->_left;
             }
             else if(kv.first > cur->_kv.first)
             {
                 parent = cur;
-                cur = cur->_left;
+                cur = cur->_right;
             }
             else
             {
@@ -65,7 +65,6 @@ public:
         //insert new node
         cur = new Node(kv);
         cur->_col = RED;
-        Node* newnode = cur;
         if (parent->_kv.first < kv.first)
         {
             parent->_right = cur;
@@ -82,7 +81,7 @@ public:
             Node* grandParent = parent->_parent;
             if(parent == grandParent->_left)
             {
-                Node* uncle = parent->_parent->_right;
+                Node* uncle = grandParent->_right;
                 //if uncle exist and is red color. renew uncle && parent's color
                 if(uncle && uncle->_col == RED)
                 {
@@ -104,7 +103,7 @@ public:
             }
             else if(parent == grandParent->_right)
             {
-                Node* uncle = parent->_parent->_left;
+                Node* uncle = grandParent->_left;
                 //if uncle exist and is red color. renew uncle && parent's color
                 if(uncle && uncle->_col == RED)
                 {
@@ -127,8 +126,9 @@ public:
             cur = grandParent;
             cur->_col = RED;
             parent = cur->_parent;
+            
+            _root->_col = BLACK;
         }
-        _root->_col = BLACK;
         return true;
     }
     
@@ -218,14 +218,3 @@ private:
         }
     }
 };
-
-int main() {
-    RBTree<int, int> rb;
-    std::vector<int> v = {1,5,74,-34,235,6,8,344,213,0};
-    for(int i = 0; i < v.size(); i++)
-    {
-        rb.insert(std::make_pair(v[i],v[i]));
-    }
-    rb.PreOrder();
-    return 0;
-}
