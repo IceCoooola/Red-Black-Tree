@@ -93,11 +93,15 @@ public:
                     if(cur == parent->_left)
                     {
                         RotateR(grandParent);
+                        parent->_col = BLACK;
+                        grandParent->_col = RED;
                     }
                     else
                     {
                         RotateL(parent);
                         RotateR(grandParent);
+                        grandParent->_col = RED;
+                        cur->_col = BLACK;
                     }
                 }
             }
@@ -115,11 +119,15 @@ public:
                     if(cur == parent->_right)
                     {
                         RotateL(grandParent);
+                        parent->_col = BLACK;
+                        grandParent->_col = RED;
                     }
                     else
                     {
                         RotateR(parent);
                         RotateL(grandParent);
+                        grandParent->_col = RED;
+                        cur->_col = BLACK;
                     }
                 }
             }
@@ -132,6 +140,19 @@ public:
         return true;
     }
     
+    bool isBalance()
+    {
+        int count = 0;
+        Node* cur = _root;
+        while(cur)
+        {
+            if(cur->_col == BLACK)
+                count++;
+            cur = cur->_left;
+        }
+        int num = 0;
+        return _isBalance(_root,num,count);
+    }
     void PreOrder()
     {
         _preOrder(_root);
@@ -217,4 +238,22 @@ private:
             subR->_parent = grandparent;
         }
     }
+    bool _isBalance(Node* root, int BlackNodeCount, int refNodeCount)
+    {
+        if(!root)
+        {
+            if(BlackNodeCount == refNodeCount)
+                return true;
+                return false;
+        }
+        
+        if(root->_col == BLACK)
+            BlackNodeCount++;
+        
+        if(root->_parent && root->_col == RED && root->_parent->_col == RED)
+            return false;
+        
+        return _isBalance(root->_left, BlackNodeCount, refNodeCount) && _isBalance(root->_right, BlackNodeCount, refNodeCount);
+    }
 };
+
